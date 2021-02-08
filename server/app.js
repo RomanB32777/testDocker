@@ -39,21 +39,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var mongoose_1 = __importDefault(require("mongoose"));
 var cors_1 = __importDefault(require("cors"));
 var path_1 = __importDefault(require("path"));
 var passport_1 = __importDefault(require("passport"));
+var db_1 = __importDefault(require("./db"));
 // const app: Application = express()
 var App = /** @class */ (function () {
     function App(IConfig) {
         this.configClass = IConfig;
-        console.log(this.configClass);
         this.app = express_1.default();
     }
     App.prototype.run = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
-            var error_1;
+            var startServer;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -87,33 +86,20 @@ var App = /** @class */ (function () {
                                 res.sendFile(path_1.default.resolve(__dirname, 'front', 'build', 'index.html'));
                             });
                         }
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        // connectDB(this.configClass.mongoUri)
-                        // "mongodb://localhost/portfolio"
-                        return [4 /*yield*/, mongoose_1.default.connect(this.configClass.mongoUri, {
-                                useCreateIndex: true,
-                                useNewUrlParser: true,
-                                useUnifiedTopology: true,
-                                useFindAndModify: false
-                                //useNewUrlParser: true, useUnifiedTopology:true
-                            }, function (err) {
-                                //console.log("don't work", err);
+                        startServer = function () {
+                            _this.app.listen(_this.configClass.port, function () {
+                                console.log("\u0421\u0435\u0440\u0432\u0435\u0440 \u0441 \u0431\u0434 " + _this.configClass.mongoUri + " \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043D\u0430 \u043Fo\u0440\u0442e " + _this.configClass.port);
+                            });
+                        };
+                        return [4 /*yield*/, db_1.default(this.configClass.mongoUri)
+                                .then(startServer)
+                                .catch(function (error) {
+                                console.log("Ошибка, связанная с базой данных", error);
+                                throw error;
                             })];
-                    case 2:
-                        // connectDB(this.configClass.mongoUri)
-                        // "mongodb://localhost/portfolio"
+                    case 1:
                         _a.sent();
-                        this.app.listen(this.configClass.port, function () {
-                            console.log("\u0421\u0435\u0440\u0432\u0435\u0440 \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043D\u0430 \u043Fo\u0440\u0442e " + _this.configClass.port);
-                        });
-                        return [3 /*break*/, 4];
-                    case 3:
-                        error_1 = _a.sent();
-                        console.log("Ошибка, связанная с базой данных", error_1);
-                        throw error_1;
-                    case 4: return [2 /*return*/];
+                        return [2 /*return*/];
                 }
             });
         });

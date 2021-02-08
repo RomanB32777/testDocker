@@ -16,11 +16,16 @@ router.get('/', async (req: Request, res: Response) => {
         // const token = req.headers.authorization?.split(' ')[1]
         // if (token) {
         //   const decoded = jwt.verify(token, config.get('jwtSecret'))
-        owner:// decoded.valueOf().id }
-        const posts = await Post.find({ status: 'created' })
-            .populate('img', 'path')
+        // owner:// decoded.valueOf().id }
+//        const newPost: IPost | undefined = new Post({ owner: '60148a7a69154e4e48e28190' })
+
+//        await newPost.save()
+//	console.log(newPost)
+       // const posts = await Post.find({ status: 'created' })
+	const posts = await Post.find()
+	    .populate('img', 'path')
             .populate('files', 'path')
-            .populate('owner', 'name')
+           // .populate('owner', 'name')
         return res.status(200).json({ success: true, posts })
 
         // }
