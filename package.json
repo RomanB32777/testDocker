@@ -11,7 +11,7 @@
     "client": "npm run start --prefix ../front",
     "client:install": "npm install --prefix ../front",
     "client:build": "npm run build --prefix ../front",
-    "dev": "cross-env NODE_ENV=development concurrently \"npm run tsc\" \"npm run server\"  \"npm run client\""
+    "dev": "cross-env NODE_ENV=development concurrently \"npm run tsc\" \"npm run server\" "
   },
   "author": "",
   "license": "ISC",

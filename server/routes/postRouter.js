@@ -1,10 +1,9 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -15,8 +14,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -37,7 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+}
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var Post_1 = __importDefault(require("../models/Post"));
 var config_1 = __importDefault(require("config"));
@@ -48,7 +48,7 @@ var mongoose_1 = require("mongoose");
 var _a = require('express-validator'), check = _a.check, validationResult = _a.validationResult;
 var Router = require('express').Router;
 var router = Router();
-router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get('/', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var posts, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -75,14 +75,15 @@ router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); });
-router.post('/create', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/create', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var token, decoded, userId, draftPost, newPost, error_2;
-    var _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                _b.trys.push([0, 5, , 6]);
-                token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+                _a.trys.push([0, 5, , 6]);
+                token = req.headers.authorization ? .split(' ')[1]
+                    :
+                ;
                 if (!token) return [3 /*break*/, 3];
                 decoded = jsonwebtoken_1.default.verify(token, config_1.default.get('jwtSecret'));
                 userId = decoded.valueOf().id;
@@ -90,18 +91,18 @@ router.post('/create', function (req, res) { return __awaiter(void 0, void 0, vo
                         .populate('img', 'path')
                         .populate('files', 'path')];
             case 1:
-                draftPost = _b.sent();
+                draftPost = _a.sent();
                 if (draftPost)
                     return [2 /*return*/, res.status(201).json({ success: true, message: "Редактирование поста", draftPost: draftPost })];
                 newPost = new Post_1.default({ owner: userId });
                 return [4 /*yield*/, newPost.save()];
             case 2:
-                _b.sent();
+                _a.sent();
                 return [2 /*return*/, res.status(201).json({ success: true, message: "Создан  пост", newPost: newPost })];
             case 3: return [2 /*return*/, res.status(401).json({ success: false, message: 'Ошибка, связанная с получением токена пользователя - нет авторизации' })];
             case 4: return [3 /*break*/, 6];
             case 5:
-                error_2 = _b.sent();
+                error_2 = _a.sent();
                 console.log(error_2);
                 return [2 /*return*/, res.status(500).json({ success: false, message: "Ошибка при создании поста", error: error_2 })];
             case 6: return [2 /*return*/];
@@ -111,11 +112,10 @@ router.post('/create', function (req, res) { return __awaiter(void 0, void 0, vo
 router.post('/edit', [
     check('title').not().isEmpty(),
     check('body').not().isEmpty(),
-], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+], function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var errors, postId, body, title, type, inMainPage, token, decoded, userId, post, user, userPosts, error_3;
-    var _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
                 errors = validationResult(req);
                 if (!errors.isEmpty()) {
@@ -129,13 +129,15 @@ router.post('/edit', [
                 title = req.body.title;
                 type = req.body.type;
                 inMainPage = req.body.inMainPage;
-                token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+                token = req.headers.authorization ? .split(' ')[1]
+                    :
+                ;
                 if (!token) return [3 /*break*/, 9];
                 decoded = jsonwebtoken_1.default.verify(token, config_1.default.get('jwtSecret'));
                 userId = decoded.valueOf().id;
-                _b.label = 1;
+                _a.label = 1;
             case 1:
-                _b.trys.push([1, 8, , 9]);
+                _a.trys.push([1, 8, , 9]);
                 return [4 /*yield*/, Post_1.default.findOneAndUpdate({
                         _id: postId,
                         owner: userId
@@ -156,31 +158,38 @@ router.post('/edit', [
                     // })
                 ];
             case 2:
-                post = _b.sent();
+                post = _a.sent();
                 if (!post) return [3 /*break*/, 6];
                 return [4 /*yield*/, User_1.default.findById(userId)];
             case 3:
-                user = _b.sent();
+                user = _a.sent();
                 if (!user) return [3 /*break*/, 5];
-                userPosts = user === null || user === void 0 ? void 0 : user.posts;
-                userPosts === null || userPosts === void 0 ? void 0 : userPosts.unshift(post._id);
+                userPosts = user ? .posts
+                    :
+                ;
+                userPosts ? .unshift(post._id)
+                    :
+                ;
                 user.posts = userPosts;
-                return [4 /*yield*/, (user === null || user === void 0 ? void 0 : user.save())];
+                return [4 /*yield*/, user];
             case 4:
-                _b.sent();
-                _b.label = 5;
+                (_a.sent()) ? .save()
+                    :
+                ;
+                _a.label = 5;
             case 5: return [2 /*return*/, res.status(201).json({ success: true, message: "Пост обнавлен", post: post })];
             case 6: return [2 /*return*/, res.status(401).json({ success: false, message: 'Ошибка при редактировании поста' })];
             case 7: return [3 /*break*/, 9];
             case 8:
-                error_3 = _b.sent();
+                error_3 = _a.sent();
                 console.log(error_3);
                 return [2 /*return*/, res.status(500).json({ success: false, message: "Ошибка при редактировании поста", error: error_3 })];
             case 9: return [2 /*return*/];
         }
     });
 }); });
-router.delete('/delete/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete('/delete/:id', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var _this = this;
     var ObjectId_1, postId, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -191,7 +200,8 @@ router.delete('/delete/:id', function (req, res) { return __awaiter(void 0, void
                 return [4 /*yield*/, Post_1.default.findOneAndDelete({
                         _id: postId
                         // _id: new ObjectId(postId)
-                    }, function (error, deletePost) { return __awaiter(void 0, void 0, void 0, function () {
+                    }, function (error, deletePost) { return __awaiter(_this, void 0, void 0, function () {
+                        var _this = this;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -206,7 +216,7 @@ router.delete('/delete/:id', function (req, res) { return __awaiter(void 0, void
                                 case 2:
                                     _a.sent();
                                     return [4 /*yield*/, User_1.default.findById(new ObjectId_1(deletePost.owner))
-                                            .then(function (ownerOfPost) { return __awaiter(void 0, void 0, void 0, function () {
+                                            .then(function (ownerOfPost) { return __awaiter(_this, void 0, void 0, function () {
                                             var posts0, posts;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
@@ -270,7 +280,7 @@ router.delete('/delete/:id', function (req, res) { return __awaiter(void 0, void
         }
     });
 }); });
-router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get('/:id', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var post, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -291,7 +301,7 @@ router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0
         }
     });
 }); });
-router.get('/edit/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get('/edit/:id', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var post, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
