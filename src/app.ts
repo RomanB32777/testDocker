@@ -16,7 +16,8 @@ export default class App {
 
     constructor(IConfig: IConfigApp) {  
         this.configClass = IConfig;
-        this.app = express()
+        console.log(this.configClass)
+	this.app = express()
     }
 
     async run(): Promise<any> {

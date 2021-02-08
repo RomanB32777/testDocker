@@ -1,0 +1,8 @@
+{
+    "port": 8800,
+    "mongoUri": "mongodb+srv://roman1:LfYMMHeGiDNALmsr@cluster0-l3hjb.azure.mongodb.net/app?retryWrites=true&w=majority",
+    "jwtSecret": "my first portfolio"
+}
+
+
+

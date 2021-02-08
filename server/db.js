@@ -34,45 +34,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+}
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var nodemailer = require('nodemailer');
-var Router = require('express').Router;
-var router = Router();
-router.post('/', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var transporter, result, error_1;
+var mongoose_1 = __importDefault(require("mongoose"));
+var connectDB = function (uri) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                console.log("mail", req.body);
-                _a.label = 1;
+            case 0: return [4 /*yield*/, mongoose_1.default.connect(uri, {
+                    useCreateIndex: true,
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true,
+                    useFindAndModify: false
+                    //useNewUrlParser: true, useUnifiedTopology:true
+                }, function (err) {
+                    console.log("don't work", err);
+                })];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                transporter = nodemailer.createTransport({
-                    host: 'smtp.mail.ru',
-                    port: 465,
-                    secure: true,
-                    auth: {
-                        user: 'webportfolio2020@mail.ru',
-                        pass: 'R4908738475'
-                    }
-                });
-                return [4 /*yield*/, transporter.sendMail({
-                        from: '<webportfolio2020@mail.ru>',
-                        to: "e228ea@gmail.com",
-                        subject: "Message from Node js",
-                        text: "This message was sent from Node js server by " + req.body.name + " (email " + req.body.email + "). Message: " + req.body.mes,
-                    })];
-            case 2:
-                result = _a.sent();
-                res.status(200).json({ result: result });
-                return [3 /*break*/, 4];
-            case 3:
-                error_1 = _a.sent();
-                console.log(error_1);
-                throw error_1;
-            case 4: return [2 /*return*/];
+                _a.sent();
+                return [2 /*return*/, mongoose_1.default.connection];
         }
     });
-}); });
-module.exports = router;
+}); };
+exports.default = connectDB;
+//  async run(): Promise<any>

@@ -1,9 +1,11 @@
 import App from './app'
-import config from 'config'
+//import config from 'config'
 
 const application: Promise<any> = new App({
-    port: config.get('port'),
-    mongoUri: config.get('mongoUri')
+    port: process.env.PORT,
+// config.get('port'),
+    mongoUri: process.env.DB
+// config.get('mongoUri')
 }).run()
 
 if (!application) {
