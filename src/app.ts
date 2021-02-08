@@ -16,7 +16,6 @@ export default class App {
 
     constructor(IConfig: IConfigApp) {  
         this.configClass = IConfig;
-        console.log(this.configClass)
 	this.app = express()
     }
 
@@ -64,29 +63,21 @@ export default class App {
                 res.sendFile(path.resolve(__dirname, 'front', 'build', 'index.html'))
             })
         }
-      
-        try {
-            // connectDB(this.configClass.mongoUri)
-            // "mongodb://localhost/portfolio"
-            await mongoose.connect(this.configClass.mongoUri, {
-                useCreateIndex: true,
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useFindAndModify: false 
-                //useNewUrlParser: true, useUnifiedTopology:true
-            }, (err) => {
-                //console.log("don't work", err);
-            })
 
+
+        const startServer = () => { 
             this.app.listen(this.configClass.port, () => {
                 console.log(`Сервер запущен на пoртe ${this.configClass.port}`);
-            })
-
-
-        } catch (error) {
-            console.log("Ошибка, связанная с базой данных", error);
-            throw error
+            }) 
         }
-    }
+
+        await connectDB(this.configClass.mongoUri)
+            .then(startServer)
+            .catch((error)  => {
+                console.log("Ошибка, связанная с базой данных", error);
+                throw error
+            })
+      
+     }
 }
 
