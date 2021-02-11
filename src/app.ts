@@ -16,7 +16,7 @@ export default class App {
 
     constructor(IConfig: IConfigApp) {  
         this.configClass = IConfig;
-        this.app = express()
+	this.app = express()
     }
 
     async run(): Promise<any> {
@@ -66,19 +66,18 @@ export default class App {
 
         const startServer = () => { 
             this.app.listen(this.configClass.port, () => {
-                console.log(`Сервер запущен на пoртe ${this.configClass.port}`);
+                console.log(`Сервер с бд ${this.configClass.mongoUri} запущен на пoртe ${this.configClass.port}`);
             }) 
         }
 
-            await connectDB(this.configClass.mongoUri)
+        await connectDB(this.configClass.mongoUri)
             .then(startServer)
             .catch((error)  => {
                 console.log("Ошибка, связанная с базой данных", error);
                 throw error
             })
-            
-            // .once("error", startServer)
+      
+     }
 
-    }
 }
 

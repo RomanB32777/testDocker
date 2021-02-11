@@ -1,12 +1,14 @@
 import App from './app'
-import config from 'config'
+import config from './config/index'
 
-const application: Promise<any> = new App({
-    port: config.get('port'),
-    mongoUri: config.get('mongoUri')
-}).run()
-
-if (!application) {
-    console.log('good bye! ');
-    process.exit(1)
+if (config.port && config.mongoUri){
+    const application: Promise<any> = new App({
+        port: +config.port,
+        mongoUri: config.mongoUri
+    }).run()
+    
+    if (!application) {
+        console.log('good bye! ');
+        process.exit(1)
+    }
 }

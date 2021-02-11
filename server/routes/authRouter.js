@@ -1,10 +1,9 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -15,8 +14,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -37,7 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+}
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var passport_1 = __importDefault(require("passport"));
 var config_1 = __importDefault(require("config"));
@@ -55,7 +55,8 @@ var router = Router();
 router.post('/register', [
     check('email', 'Некорректная почта').isEmail(),
     check('password', 'Некорректный пароль - мин 6 символов').isLength({ min: 6 }),
-], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+], function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var _this = this;
     var errors, email_1, password_1, can, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -76,10 +77,11 @@ router.post('/register', [
                 if (can) {
                     return [2 /*return*/, res.status(401).json({ success: false, messsage: 'такой уже есть' })];
                 }
-                bcryptjs_1.default.genSalt(10, function (err, salt) { return __awaiter(void 0, void 0, void 0, function () {
+                bcryptjs_1.default.genSalt(10, function (err, salt) { return __awaiter(_this, void 0, void 0, function () {
+                    var _this = this;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, bcryptjs_1.default.hash(password_1, salt, function (err, hash) { return __awaiter(void 0, void 0, void 0, function () {
+                            case 0: return [4 /*yield*/, bcryptjs_1.default.hash(password_1, salt, function (err, hash) { return __awaiter(_this, void 0, void 0, function () {
                                     var user;
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
@@ -114,7 +116,7 @@ router.post('/register', [
 router.post('/login', [
     check('email', 'Некорректная почта').isEmail(),
     check('password', 'Некорректный пароль - мин 6 символов').isLength({ min: 6 }),
-], function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+], function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
     var errors;
     return __generator(this, function (_a) {
         errors = validationResult(req);
@@ -179,21 +181,22 @@ router.post('/login', [
 //     }
 //     next();
 //   }
-router.get('/logout', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get('/logout', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     var token, decoded;
-    var _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+                token = req.headers.authorization ? .split(' ')[1]
+                    :
+                ;
                 if (!token) return [3 /*break*/, 2];
                 decoded = jsonwebtoken_1.default.verify(token, config_1.default.get('jwtSecret'));
                 return [4 /*yield*/, User_1.default.findByIdAndUpdate(decoded.id, { isAuthenticated: false })];
             case 1:
-                _b.sent();
+                _a.sent();
                 req.logOut();
                 res.json({ success: true, mes: 'Вы вышли из аккаунта' });
-                _b.label = 2;
+                _a.label = 2;
             case 2: return [2 /*return*/];
         }
     });
@@ -217,7 +220,7 @@ router.get('/dashboard', function (req, res, next) {
     })(req, res, next);
 });
 router.get('/admin', function (req, res, next) {
-    passport_1.default.authenticate('jwt', { session: false }, function (err, admin, info) { return __awaiter(void 0, void 0, void 0, function () {
+    passport_1.default.authenticate('jwt', { session: false }, function (err, admin, info) { return __awaiter(_this, void 0, void 0, function () {
         var users;
         return __generator(this, function (_a) {
             switch (_a.label) {

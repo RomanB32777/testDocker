@@ -1,10 +1,9 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -15,8 +14,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -35,16 +34,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+}
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var config_1 = __importDefault(require("config"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -66,12 +59,14 @@ var storage = multer.diskStorage({
 });
 var uploadFile = multer({ storage: storage }).single('file');
 router.post('/upload', function (req, res) {
-    var _a;
-    var token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+    var token = req.headers.authorization ? .split(' ')[1]
+        :
+    ;
     if (token) {
         var decoded = jsonwebtoken_1.default.verify(token, config_1.default.get('jwtSecret'));
         var ownerId_1 = decoded.valueOf().id;
-        uploadFile(req, res, function (err) { return __awaiter(void 0, void 0, void 0, function () {
+        uploadFile(req, res, function (err) { return __awaiter(_this, void 0, void 0, function () {
+            var _this = this;
             var postId, typeUpload, path, file;
             return __generator(this, function (_a) {
                 postId = req.body.postId;
@@ -89,7 +84,7 @@ router.post('/upload', function (req, res) {
                     post: postId
                 });
                 file.save()
-                    .then(function (result) { return __awaiter(void 0, void 0, void 0, function () {
+                    .then(function (result) { return __awaiter(_this, void 0, void 0, function () {
                     var owner, ownerFiles;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -103,15 +98,21 @@ router.post('/upload', function (req, res) {
                             case 3:
                                 owner = _a.sent();
                                 if (!owner) return [3 /*break*/, 5];
-                                ownerFiles = owner === null || owner === void 0 ? void 0 : owner.files;
-                                ownerFiles === null || ownerFiles === void 0 ? void 0 : ownerFiles.unshift(result.id);
+                                ownerFiles = owner ? .files
+                                    :
+                                ;
+                                ownerFiles ? .unshift(result.id)
+                                    :
+                                ;
                                 owner.files = ownerFiles;
                                 if (typeUpload === 'avatar') {
                                     owner.avatar = result.id;
                                 }
-                                return [4 /*yield*/, (owner === null || owner === void 0 ? void 0 : owner.save())];
+                                return [4 /*yield*/, owner];
                             case 4:
-                                _a.sent();
+                                (_a.sent()) ? .save()
+                                    :
+                                ;
                                 _a.label = 5;
                             case 5:
                                 res.status(201).json({
@@ -154,15 +155,18 @@ var uploadFiles = multer({
         }
     }
 }).array('imgCollection', 10);
-router.post('/upload-files', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/upload-files', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var _this = this;
     var token, decoded, ownerId_2;
-    var _a;
-    return __generator(this, function (_b) {
-        token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+    return __generator(this, function (_a) {
+        token = req.headers.authorization ? .split(' ')[1]
+            :
+        ;
         if (token) {
             decoded = jsonwebtoken_1.default.verify(token, config_1.default.get('jwtSecret'));
             ownerId_2 = decoded.valueOf().id;
-            uploadFiles(req, res, function (err) { return __awaiter(void 0, void 0, void 0, function () {
+            uploadFiles(req, res, function (err) { return __awaiter(_this, void 0, void 0, function () {
+                var _this = this;
                 var reqFiles, postId, url, i, files;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -179,7 +183,7 @@ router.post('/upload-files', function (req, res) { return __awaiter(void 0, void
                             }
                             files = [];
                             return [4 /*yield*/, File_1.default.insertMany(reqFiles)
-                                    .then(function (res) { return __awaiter(void 0, void 0, void 0, function () {
+                                    .then(function (res) { return __awaiter(_this, void 0, void 0, function () {
                                     var filesId, _i, _a, key, post, postFiles, owner, ownerFiles;
                                     return __generator(this, function (_b) {
                                         switch (_b.label) {
@@ -197,22 +201,26 @@ router.post('/upload-files', function (req, res) { return __awaiter(void 0, void
                                             case 1:
                                                 post = _b.sent();
                                                 if (!post) return [3 /*break*/, 3];
-                                                postFiles = __spreadArrays(post === null || post === void 0 ? void 0 : post.files, filesId);
+                                                postFiles = (post ? .files : ).concat(filesId);
                                                 post.files = postFiles;
-                                                return [4 /*yield*/, (post === null || post === void 0 ? void 0 : post.save())];
+                                                return [4 /*yield*/, post];
                                             case 2:
-                                                _b.sent();
+                                                (_b.sent()) ? .save()
+                                                    :
+                                                ;
                                                 _b.label = 3;
                                             case 3: return [4 /*yield*/, User_1.default.findById(ownerId_2)];
                                             case 4:
                                                 owner = _b.sent();
                                                 if (!owner) return [3 /*break*/, 6];
-                                                ownerFiles = __spreadArrays(owner === null || owner === void 0 ? void 0 : owner.files, filesId);
+                                                ownerFiles = (owner ? .files : ).concat(filesId);
                                                 //ownerFiles?.unshift(result.id)
                                                 owner.files = ownerFiles;
-                                                return [4 /*yield*/, (owner === null || owner === void 0 ? void 0 : owner.save())];
+                                                return [4 /*yield*/, owner];
                                             case 5:
-                                                _b.sent();
+                                                (_b.sent()) ? .save()
+                                                    :
+                                                ;
                                                 _b.label = 6;
                                             case 6: return [2 /*return*/];
                                         }
@@ -232,7 +240,8 @@ router.post('/upload-files', function (req, res) { return __awaiter(void 0, void
         return [2 /*return*/];
     });
 }); });
-router.delete('/delete/:type/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete('/delete/:type/:id', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var _this = this;
     var fileId, type;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -241,7 +250,7 @@ router.delete('/delete/:type/:id', function (req, res) { return __awaiter(void 0
                 type = req.params.type;
                 return [4 /*yield*/, File_1.default.findOneAndDelete({
                         _id: fileId
-                    }, function (error, deleteFile) { return __awaiter(void 0, void 0, void 0, function () {
+                    }, function (error, deleteFile) { return __awaiter(_this, void 0, void 0, function () {
                         var _a, post, files, afterDeleteFiles, owner, files, afterDeleteFiles, error_1;
                         return __generator(this, function (_b) {
                             switch (_b.label) {
@@ -267,11 +276,11 @@ router.delete('/delete/:type/:id', function (req, res) { return __awaiter(void 0
                                 case 5:
                                     post = _b.sent();
                                     if (post) {
-                                        files = __spreadArrays(post.files);
+                                        files = post.files.slice();
                                         afterDeleteFiles = files.filter(function (file) {
                                             return file.toJSON() !== deleteFile._id.toJSON();
                                         });
-                                        post.files = __spreadArrays(afterDeleteFiles);
+                                        post.files = afterDeleteFiles.slice();
                                         post.save();
                                     }
                                     return [3 /*break*/, 7];
@@ -280,11 +289,11 @@ router.delete('/delete/:type/:id', function (req, res) { return __awaiter(void 0
                                 case 8:
                                     owner = _b.sent();
                                     if (owner) {
-                                        files = __spreadArrays(owner.files);
+                                        files = owner.files.slice();
                                         afterDeleteFiles = files.filter(function (file) {
                                             return file.toJSON() !== deleteFile._id.toJSON();
                                         });
-                                        owner.files = __spreadArrays(afterDeleteFiles); // .???
+                                        owner.files = afterDeleteFiles.slice(); // .???
                                         owner.save();
                                     }
                                     res.status(200).json({

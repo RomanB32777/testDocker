@@ -1,10 +1,9 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -15,8 +14,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -37,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
@@ -54,6 +53,7 @@ var App = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var startServer;
             var _this = this;
+            var startServer;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -89,7 +89,7 @@ var App = /** @class */ (function () {
                         }
                         startServer = function () {
                             _this.app.listen(_this.configClass.port, function () {
-                                console.log("\u0421\u0435\u0440\u0432\u0435\u0440 \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043D\u0430 \u043Fo\u0440\u0442e " + _this.configClass.port);
+                                console.log("\u0421\u0435\u0440\u0432\u0435\u0440 \u0441 \u0431\u0434 " + _this.configClass.mongoUri + " \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043D\u0430 \u043Fo\u0440\u0442e " + _this.configClass.port);
                             });
                         };
                         return [4 /*yield*/, db_1.default(this.configClass.mongoUri)
@@ -100,6 +100,7 @@ var App = /** @class */ (function () {
                             })
                             // .once("error", startServer)
                         ];
+
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
