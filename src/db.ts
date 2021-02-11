@@ -9,7 +9,6 @@ const connectDB = async (uri: string) => {
         useFindAndModify: false 
         //useNewUrlParser: true, useUnifiedTopology:true
     })
-
     return mongoose.connection
 }
 

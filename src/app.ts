@@ -64,7 +64,6 @@ export default class App {
             })
         }
 
-
         const startServer = () => { 
             this.app.listen(this.configClass.port, () => {
                 console.log(`Сервер с бд ${this.configClass.mongoUri} запущен на пoртe ${this.configClass.port}`);
@@ -79,5 +78,6 @@ export default class App {
             })
       
      }
+
 }
 

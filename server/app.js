@@ -51,6 +51,7 @@ var App = /** @class */ (function () {
     }
     App.prototype.run = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var startServer;
             var _this = this;
             var startServer;
             return __generator(this, function (_a) {
@@ -96,7 +97,10 @@ var App = /** @class */ (function () {
                                 .catch(function (error) {
                                 console.log("Ошибка, связанная с базой данных", error);
                                 throw error;
-                            })];
+                            })
+                            // .once("error", startServer)
+                        ];
+
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
