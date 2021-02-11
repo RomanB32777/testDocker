@@ -7,9 +7,11 @@ const connectDB = async (uri: string) => {
         useUnifiedTopology: true,
         useFindAndModify: false 
         //useNewUrlParser: true, useUnifiedTopology:true
-    }, (err) => {
-        console.log("don't work", err);
-    }) 
+    })
+
+    // , (err) => {
+    //     console.log("don't work", err);
+    // }
 
     return mongoose.connection
 }
