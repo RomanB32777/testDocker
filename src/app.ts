@@ -51,10 +51,10 @@ export default class App {
 
         this.app.use(express.static(path.join(__dirname, 'public')))
         this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
-        this.app.use('/api/auth', require('./routes/authRouter'))
-        this.app.use('/api/post', require('./routes/postRouter'))
-        this.app.use('/api/mail', require('./routes/mailerRouter'))
-        this.app.use('/api/file', require('./routes/fileRouter'))
+        this.app.use('/auth', require('./routes/authRouter'))
+        this.app.use('/post', require('./routes/postRouter'))
+        this.app.use('/mail', require('./routes/mailerRouter'))
+        this.app.use('/file', require('./routes/fileRouter'))
 
         if (process.env.NODE_ENV === 'production'){
             this.app.use('/', express.static(path.join(__dirname, 'front', 'build'))) // подключаем статическую папку с фронтом
